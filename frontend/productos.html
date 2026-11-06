@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Productos | INIFAP Soluciones Agropecuarias</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="site-header__brand">
+        <a href="index.html" class="site-header__logo-badge">
+            <img src="img/logo-mark.png" alt="INIFAP">
+        </a>
+        <span class="site-header__title">Soluciones Agropecuarias</span>
+    </div>
+    <nav class="site-nav" id="site-nav">
+        <a href="index.html" class="site-nav__link">Inicio</a>
+        <a href="equipo.html" class="site-nav__link">Equipo</a>
+        <a href="productos.html" class="site-nav__link is-active">Productos</a>
+        <a href="servicios.html" class="site-nav__link">Servicios</a>
+    </nav>
+    <button type="button" class="site-header__toggle" aria-label="Abrir men&uacute;" aria-expanded="false" aria-controls="site-nav">&#9776;</button>
+</header>
+
+<main>
+
+    <section class="page-banner">
+        <h1>Cat&aacute;logo de productos</h1>
+        <p>Semillas mejoradas y materiales agr&iacute;colas desarrollados por el INIFAP. Solicita una cotizaci&oacute;n o deja tu opini&oacute;n sobre cualquiera de ellos.</p>
+    </section>
+
+    <section class="section" id="productos-list">
+        <p class="accordion__loading">Cargando productos&hellip;</p>
+    </section>
+
+</main>
+
+<dialog id="accion-modal" class="accion-modal">
+    <form id="accion-form" class="accion-modal__form">
+        <h3 id="accion-modal-title">Solicitar cotizaci&oacute;n</h3>
+        <p class="accion-modal__producto" id="accion-modal-producto"></p>
+
+        <input type="hidden" name="producto_id" id="accion-producto-id">
+        <input type="hidden" name="calificacion" id="accion-calificacion" value="5">
+
+        <div class="contact-form__row">
+            <input type="text" name="nombre" placeholder="Nombre" required>
+            <input type="email" name="correo" placeholder="Correo" required>
+        </div>
+        <div class="contact-form__row" id="accion-telefono-row">
+            <input type="tel" name="telefono" placeholder="Tel&eacute;fono (opcional)">
+        </div>
+
+        <div class="star-rating" id="accion-estrellas" hidden>
+            <button type="button" data-value="1" aria-label="1 estrella">&#9733;</button>
+            <button type="button" data-value="2" aria-label="2 estrellas">&#9733;</button>
+            <button type="button" data-value="3" aria-label="3 estrellas">&#9733;</button>
+            <button type="button" data-value="4" aria-label="4 estrellas">&#9733;</button>
+            <button type="button" data-value="5" aria-label="5 estrellas">&#9733;</button>
+        </div>
+
+        <textarea name="mensaje" id="accion-mensaje" rows="4" required></textarea>
+
+        <div class="accion-modal__actions">
+            <button type="button" id="accion-cancelar" class="btn-secondary">Cancelar</button>
+            <button type="submit">Enviar</button>
+        </div>
+        <p class="contact-form__status" id="accion-status" role="status"></p>
+    </form>
+</dialog>
+
+<footer class="site-footer">
+    <img class="site-footer__logo" src="img/logo-full.png" alt="INIFAP - Instituto Nacional de Investigaciones Forestales, Agr&iacute;colas y Pecuarias">
+</footer>
+
+<script src="js/nav.js"></script>
+<script src="js/catalogo.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        cargarCatalogo('producto', 'productos-list');
+        initAccionModal();
+    });
+</script>
+</body>
+</html>

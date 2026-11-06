@@ -1,0 +1,18 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: inifap_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: inifap
+      POSTGRES_PASSWORD: inifap
+      POSTGRES_DB: inifap_soluciones
+    ports:
+      - "5433:5432"
+    volumes:
+      - inifap_pgdata:/var/lib/postgresql/data
+      - ./backend/db/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ./backend/db/seed.sql:/docker-entrypoint-initdb.d/02_seed.sql
+
+volumes:
+  inifap_pgdata:

@@ -1,0 +1,422 @@
+<title>Arquitectura Soluciones Agropecuarias</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --paper: #f3f4ee;
+    --paper-raised: #ffffff;
+    --ink: #20261f;
+    --ink-muted: #5b6358;
+    --line: #c9cdc1;
+    --green: #2f6b3c;
+    --terracotta: #b5572c;
+    --slate: #3b5366;
+    --write: var(--terracotta);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #15170f;
+      --paper-raised: #1d2117;
+      --ink: #eef0e6;
+      --ink-muted: #a7af9b;
+      --line: #343a2c;
+      --green: #74c686;
+      --terracotta: #e3875c;
+      --slate: #86b2cc;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #15170f;
+    --paper-raised: #1d2117;
+    --ink: #eef0e6;
+    --ink-muted: #a7af9b;
+    --line: #343a2c;
+    --green: #74c686;
+    --terracotta: #e3875c;
+    --slate: #86b2cc;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", Arial, Helvetica, sans-serif;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .mono { font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace; }
+
+  .sheet {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 2.6rem 2.4rem 2rem;
+    border-left: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+  }
+
+  /* ---------- Encabezado tipo lamina tecnica ---------- */
+  .eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--terracotta);
+    flex: none;
+  }
+
+  h1 {
+    margin: 0.5rem 0 0.3rem;
+    font-size: clamp(1.7rem, 1.4rem + 1vw, 2.15rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  .subtitle {
+    margin: 0 0 1.1rem;
+    color: var(--ink-muted);
+    font-size: 1rem;
+  }
+
+  .intro {
+    max-width: 62ch;
+    font-size: 0.98rem;
+  }
+  .intro strong { color: var(--ink); font-weight: 600; }
+
+  /* ---------- Secciones ---------- */
+  section { margin-top: 2.6rem; }
+
+  h2 {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin: 0 0 1.1rem;
+    font-size: 1.02rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  h2 .num {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+  }
+  h2::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+    transform: translateY(2px);
+  }
+
+  figure { margin: 0; }
+  figcaption {
+    margin-top: 0.9rem;
+    font-size: 0.88rem;
+    color: var(--ink-muted);
+    max-width: 68ch;
+  }
+  figcaption b { color: var(--ink); font-weight: 600; }
+
+  .diagram-wrap {
+    overflow-x: auto;
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 0.6rem;
+  }
+  svg { display: block; width: 100%; height: auto; }
+
+  /* clases usadas dentro del SVG */
+  .layer-rect { fill: var(--paper-raised); stroke-width: 1.6; }
+  .layer-client { stroke: var(--green); }
+  .layer-server { stroke: var(--terracotta); }
+  .layer-db { stroke: var(--slate); }
+  .layer-title-client { fill: var(--green); font-weight: 700; }
+  .layer-title-server { fill: var(--terracotta); font-weight: 700; }
+  .layer-title-db { fill: var(--slate); font-weight: 700; }
+  .layer-sub { fill: var(--ink-muted); }
+  .layer-item { fill: var(--ink); }
+  .layer-divider { stroke: var(--line); }
+  .flow-line { stroke: var(--ink); stroke-width: 1.6; fill: none; }
+  .flow-line--write { stroke: var(--write); stroke-width: 1.6; stroke-dasharray: 5 4; fill: none; }
+  .flow-label { fill: var(--ink-muted); }
+  .flow-label--write { fill: var(--write); }
+  .legend-text { fill: var(--ink-muted); }
+
+  /* ---------- Arbol de carpetas ---------- */
+  .tree {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--paper-raised);
+    overflow: hidden;
+  }
+  .tree__folder {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.9rem;
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 600;
+    font-size: 0.86rem;
+    border-left: 4px solid var(--line);
+    background: color-mix(in srgb, var(--paper) 55%, transparent);
+  }
+  .tree__folder--client { border-left-color: var(--green); color: var(--green); }
+  .tree__folder--server { border-left-color: var(--terracotta); color: var(--terracotta); }
+  .tree__folder--root   { border-left-color: var(--slate); color: var(--slate); }
+
+  .tree__row {
+    display: grid;
+    grid-template-columns: 230px 1fr;
+    gap: 0.75rem;
+    padding: 0.42rem 0.9rem 0.42rem 1.6rem;
+    border-top: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .tree__row--nested { padding-left: 2.6rem; }
+  .tree__path {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.82rem;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .tree__desc {
+    font-size: 0.84rem;
+    color: var(--ink-muted);
+  }
+
+  /* ---------- Tabla resumen ---------- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+    font-size: 0.9rem;
+  }
+  thead th {
+    text-align: left;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    padding: 0.6rem 0.9rem;
+    border-bottom: 1px solid var(--line);
+  }
+  tbody td {
+    padding: 0.65rem 0.9rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody td:first-child {
+    font-weight: 600;
+    border-left: 4px solid var(--line);
+    white-space: nowrap;
+  }
+  tr.row-client td:first-child { border-left-color: var(--green); color: var(--green); }
+  tr.row-server td:first-child { border-left-color: var(--terracotta); color: var(--terracotta); }
+  tr.row-db td:first-child { border-left-color: var(--slate); color: var(--slate); }
+  td.tech { font-family: "IBM Plex Mono", monospace; font-size: 0.83rem; color: var(--ink); white-space: nowrap; }
+
+  /* ---------- Cuadro de datos (lamina) ---------- */
+  .titleblock {
+    margin-top: 2.8rem;
+    border-top: 1px solid var(--ink);
+    padding-top: 0.9rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem 1.4rem;
+    font-family: "IBM Plex Mono", monospace;
+  }
+  .titleblock div { display: flex; flex-direction: column; gap: 0.2rem; }
+  .titleblock .label {
+    font-size: 0.64rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .titleblock .value {
+    font-size: 0.82rem;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (max-width: 640px) {
+    .sheet { padding: 1.8rem 1.2rem; border-left: none; border-right: none; }
+    .tree__row { grid-template-columns: 1fr; gap: 0.15rem; }
+    .titleblock { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+
+<div class="sheet">
+
+  <p class="eyebrow">Documento técnico · lámina 1/1</p>
+  <h1>Arquitectura del sistema</h1>
+  <p class="subtitle">Catálogo de Productos y Servicios &mdash; INIFAP, Campo Experimental Valle del Guadiana</p>
+  <p class="intro">
+    El sitio sustituye la versión estática (Google Sites) por una aplicación de
+    <strong>tres capas</strong>: un frontend que el navegador descarga y ejecuta, un
+    servidor que expone una <strong>API REST</strong>, y una base de datos relacional
+    donde vive el catálogo real de productos y servicios.
+  </p>
+
+  <section>
+    <h2><span class="num">01</span> Diagrama de arquitectura</h2>
+    <figure>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 1220 405" role="img" aria-label="Diagrama de tres capas: cliente en el navegador, servidor Node.js con Express, y base de datos PostgreSQL. Flechas continuas muestran la consulta del catalogo via GET y SELECT; flechas discontinuas muestran el guardado del formulario de contacto via POST e INSERT.">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" style="fill:var(--ink)"></path>
+            </marker>
+            <marker id="arrowWrite" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" style="fill:var(--write)"></path>
+            </marker>
+          </defs>
+
+          <!-- Columna A: Cliente -->
+          <rect class="layer-rect layer-client" x="20" y="50" width="220" height="260" rx="10"></rect>
+          <text class="layer-title-client mono" x="34" y="85" font-size="14">CLIENTE</text>
+          <text class="layer-sub mono" x="34" y="103" font-size="10.5">Navegador &mdash; frontend/</text>
+          <line class="layer-divider" x1="34" y1="114" x2="226" y2="114"></line>
+          <text class="layer-item mono" x="34" y="141" font-size="12">index.html</text>
+          <text class="layer-item mono" x="34" y="165" font-size="12">css/style.css</text>
+          <text class="layer-item mono" x="34" y="189" font-size="12">js/main.js</text>
+
+          <!-- Columna B: Servidor -->
+          <rect class="layer-rect layer-server" x="500" y="50" width="220" height="260" rx="10"></rect>
+          <text class="layer-title-server mono" x="514" y="85" font-size="14">SERVIDOR</text>
+          <text class="layer-sub mono" x="514" y="103" font-size="10.5">Node.js + Express &mdash; backend/</text>
+          <line class="layer-divider" x1="514" y1="114" x2="706" y2="114"></line>
+          <text class="layer-item mono" x="514" y="141" font-size="12">server.js</text>
+          <text class="layer-item mono" x="514" y="165" font-size="12">routes/*.js</text>
+          <text class="layer-item mono" x="514" y="189" font-size="12">db/pool.js</text>
+
+          <!-- Columna C: Base de datos -->
+          <rect class="layer-rect layer-db" x="980" y="50" width="220" height="260" rx="10"></rect>
+          <text class="layer-title-db mono" x="994" y="85" font-size="14">BASE DE DATOS</text>
+          <text class="layer-sub mono" x="994" y="103" font-size="10.5">PostgreSQL &mdash; inifap_postgres</text>
+          <line class="layer-divider" x1="994" y1="114" x2="1186" y2="114"></line>
+          <text class="layer-item mono" x="994" y="141" font-size="12">categorias</text>
+          <text class="layer-item mono" x="994" y="165" font-size="12">productos_servicios</text>
+          <text class="layer-item mono" x="994" y="189" font-size="12">mensajes</text>
+
+          <!-- Flujo 1: Cliente <-> Servidor -->
+          <text class="flow-label mono" x="370" y="128" font-size="11.5" text-anchor="middle">&#9312; GET /api/productos</text>
+          <line class="flow-line" x1="250" y1="140" x2="490" y2="140" marker-end="url(#arrow)"></line>
+
+          <text class="flow-label mono" x="370" y="188" font-size="11.5" text-anchor="middle">&#9313; 200 OK &mdash; JSON</text>
+          <line class="flow-line" x1="490" y1="200" x2="250" y2="200" marker-end="url(#arrow)"></line>
+
+          <text class="flow-label flow-label--write mono" x="370" y="248" font-size="11.5" text-anchor="middle">&#9314; POST /api/mensajes</text>
+          <line class="flow-line--write" x1="250" y1="260" x2="490" y2="260" marker-end="url(#arrowWrite)"></line>
+
+          <!-- Flujo 2: Servidor <-> Base de datos -->
+          <text class="flow-label mono" x="850" y="128" font-size="11.5" text-anchor="middle">&#9312; Consulta SQL (SELECT)</text>
+          <line class="flow-line" x1="730" y1="140" x2="970" y2="140" marker-end="url(#arrow)"></line>
+
+          <text class="flow-label mono" x="850" y="188" font-size="11.5" text-anchor="middle">&#9313; Filas (resultado)</text>
+          <line class="flow-line" x1="970" y1="200" x2="730" y2="200" marker-end="url(#arrow)"></line>
+
+          <text class="flow-label flow-label--write mono" x="850" y="248" font-size="11.5" text-anchor="middle">&#9314; Guardar (INSERT)</text>
+          <line class="flow-line--write" x1="730" y1="260" x2="970" y2="260" marker-end="url(#arrowWrite)"></line>
+
+          <!-- Leyenda -->
+          <line class="layer-divider" x1="20" y1="335" x2="1200" y2="335"></line>
+          <line class="flow-line" x1="20" y1="358" x2="60" y2="358" marker-end="url(#arrow)"></line>
+          <text class="legend-text mono" x="70" y="362" font-size="11.5">Consulta del catálogo &mdash; lectura (GET / SELECT)</text>
+          <line class="flow-line--write" x1="20" y1="382" x2="60" y2="382" marker-end="url(#arrowWrite)"></line>
+          <text class="legend-text mono" x="70" y="386" font-size="11.5">Formulario de contacto &mdash; escritura (POST / INSERT)</text>
+        </svg>
+      </div>
+      <figcaption>
+        <b>Figura 1.</b> El cliente consulta el catálogo activo mediante la API REST
+        (<code class="mono">GET /api/productos</code>), que el servidor resuelve con una consulta
+        <code class="mono">SELECT</code> a PostgreSQL y devuelve como JSON. El formulario de
+        contacto sigue la ruta inversa: el servidor recibe el <code class="mono">POST</code> y
+        lo persiste con un <code class="mono">INSERT</code> en la tabla <code class="mono">mensajes</code>.
+      </figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="num">02</span> Estructura de carpetas</h2>
+    <div class="tree">
+      <div class="tree__folder tree__folder--client">frontend/</div>
+      <div class="tree__row"><span class="tree__path">index.html</span><span class="tree__desc">Página principal: inicio, misión/visión, catálogo y contacto.</span></div>
+      <div class="tree__row"><span class="tree__path">css/style.css</span><span class="tree__desc">Colores institucionales, tipografía y recuadros grises de imagen.</span></div>
+      <div class="tree__row"><span class="tree__path">js/main.js</span><span class="tree__desc">Consume la API, renderiza el catálogo y envía el formulario.</span></div>
+
+      <div class="tree__folder tree__folder--server">backend/</div>
+      <div class="tree__row"><span class="tree__path">server.js</span><span class="tree__desc">Punto de entrada: registra las rutas y sirve el frontend.</span></div>
+      <div class="tree__row"><span class="tree__path">package.json</span><span class="tree__desc">Dependencias: express, pg, dotenv.</span></div>
+      <div class="tree__row"><span class="tree__path">.env.example</span><span class="tree__desc">Variables de conexión a PostgreSQL.</span></div>
+      <div class="tree__row tree__row--nested"><span class="tree__path">db/pool.js</span><span class="tree__desc">Pool de conexiones a PostgreSQL.</span></div>
+      <div class="tree__row tree__row--nested"><span class="tree__path">db/schema.sql</span><span class="tree__desc">Creación de tablas: categorias, productos_servicios, mensajes.</span></div>
+      <div class="tree__row tree__row--nested"><span class="tree__path">db/seed.sql</span><span class="tree__desc">Datos iniciales de ejemplo del catálogo.</span></div>
+      <div class="tree__row tree__row--nested"><span class="tree__path">routes/categorias.js</span><span class="tree__desc">GET /api/categorias</span></div>
+      <div class="tree__row tree__row--nested"><span class="tree__path">routes/productos.js</span><span class="tree__desc">GET /api/productos, GET /api/productos/:id</span></div>
+      <div class="tree__row tree__row--nested"><span class="tree__path">routes/mensajes.js</span><span class="tree__desc">POST /api/mensajes</span></div>
+
+      <div class="tree__folder tree__folder--root">raíz del proyecto</div>
+      <div class="tree__row"><span class="tree__path">docker-compose.yml</span><span class="tree__desc">Contenedor PostgreSQL con esquema y datos precargados.</span></div>
+      <div class="tree__row"><span class="tree__path">README.md</span><span class="tree__desc">Instrucciones de instalación y ejecución.</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">03</span> Resumen de componentes</h2>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr><th>Capa</th><th>Tecnología</th><th>Responsabilidad principal</th></tr>
+        </thead>
+        <tbody>
+          <tr class="row-client">
+            <td>Cliente</td>
+            <td class="tech">HTML&nbsp;/&nbsp;CSS&nbsp;/&nbsp;JavaScript</td>
+            <td>Mostrar la página y consumir la API para pintar el catálogo y enviar el formulario.</td>
+          </tr>
+          <tr class="row-server">
+            <td>Servidor</td>
+            <td class="tech">Node.js&nbsp;+&nbsp;Express</td>
+            <td>Exponer la API REST, validar las peticiones y servir los archivos estáticos.</td>
+          </tr>
+          <tr class="row-db">
+            <td>Base de datos</td>
+            <td class="tech">PostgreSQL&nbsp;16</td>
+            <td>Almacenar categorías, productos/servicios y mensajes de contacto.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="titleblock">
+    <div><span class="label">Proyecto</span><span class="value">Soluciones Agropecuarias</span></div>
+    <div><span class="label">Institución</span><span class="value">INIFAP &mdash; CE Valle del Guadiana</span></div>
+    <div><span class="label">Stack</span><span class="value">Node / Express / PostgreSQL</span></div>
+    <div><span class="label">Fecha</span><span class="value">02 / 11 / 2026</span></div>
+  </div>
+
+</div>
